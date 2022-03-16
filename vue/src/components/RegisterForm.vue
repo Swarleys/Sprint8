@@ -40,6 +40,7 @@ const createUser = () => {
             window.localStorage.setItem(user, JSON.stringify(newUser))
             console.log('There are no errors you will be registered right away.');
             storeUsers.addUser(userEmail.value, password.value);
+            storeUsers.isLogged = true;
             router.push('/starships');
             storeUsers.isOpenRegister = false
         }

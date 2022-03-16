@@ -19,6 +19,7 @@ const singInUser = () => {
         if (password.value === userParsed.password) {
             console.log("Correct user, welcome back.");
             storeUsers.isOpenLogin = false;
+            storeUsers.isLogged = true;
             router.push('/starships');
         } else {
             alert("Password is not correct.");
@@ -27,7 +28,6 @@ const singInUser = () => {
     }else {
         alert("User not found.");
     }
-    
 }
 
 const openRegister = () => {
@@ -46,7 +46,7 @@ const openRegister = () => {
         <DialogOverlay class="fixed inset-0 bg-black/20" />
         <div class="absolute max-w-md mx-auto bg-gray-900 rounded-md p-10 top-28 shadow-lg">
             <form @submit.prevent class="flex flex-col max-w-md m-auto gap-3 mb-4">
-                <div class="logoPrimary h-[60px] bg-no-repeat w-[70%] m-auto"></div>
+                <div class="logoPrimary h-[60px] bg-no-repeat w-[90%] m-auto"></div>
                 <h2 class="text-4xl text-yellow-300 text-center uppercase">Sign In</h2>
                 <input
                     type="email"
