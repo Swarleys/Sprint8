@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { Users } from "../interfaces/interfaces";
 
-
 export const useUsers = defineStore('users', {
     state: () => ({
         users: [] as Users[],

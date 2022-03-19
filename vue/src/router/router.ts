@@ -10,7 +10,6 @@ export const routes: RouteRecordRaw[] = [
     {
         path: '/',
         component: Welcome,
-        name: 'Welcome'
     },
     {
         path: '/starships',

@@ -1,5 +1,6 @@
 import { Starship, StarshipList } from '../interfaces/interfaces';
 import { defineStore } from "pinia";
+import { useStarWarsPilots } from './pilots';
 
 const baseURI = 'https://swapi.dev/api'
 
@@ -9,11 +10,35 @@ export const useStarWarsShips = defineStore('starships', {
         starship: {} as Starship,
         next: 'https://swapi.dev/api/starships/'
     }),
+    getters: {
+        amountPilots: (state): number | void => {
+            if (state.starship) {
+                return state.starship?.pilots?.length || 0;
+            }
+        },
+        messagePilots(state): string {
+            let message: string = '';
+            if(this.amountPilots > 0) {
+                message = `We found ${ this.amountPilots } ${ this.amountPilots === 1 ? 'pilot' : 'pilots' } for the ${ state.starship.name }:`
+            }
+            return message;
+        },
+        populatePilots(state) {
+            const usePilots = useStarWarsPilots()
+            if (this.amountPilots > 0) {
+                usePilots.fetchPilots(state.starship.pilots)
+                usePilots.idPilots = state.starship.pilots.map((pilot) => pilot.split('people/')[1].split('/')[0]);
+            } else {
+                usePilots.pilots = [];
+                usePilots.idPilots = []
+            }
+        }
+    },
     actions: {
         async fetchStarshipsList(): Promise<StarshipList> {
             const res = await fetch(`${baseURI}/starships`);
             const starShipsResponse = await res.json();
-            if (this.starshipList.length === 0) {                
+            if (this.starshipList.length === 0) {
                 this.starshipList.push(...starShipsResponse.results);
                 this.next = starShipsResponse.next;
             }
@@ -30,7 +55,6 @@ export const useStarWarsShips = defineStore('starships', {
             const res = await fetch(`${baseURI}${uri}`);
             this.starship = await res.json();
             return this.starship;
-        },
+        }
     },
-
 })
