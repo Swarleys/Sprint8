@@ -1,7 +1,6 @@
 import { Starship, StarshipList } from '../interfaces/interfaces';
 import { defineStore } from "pinia";
 import { useStarWarsPilots } from './pilots';
-import { useRoute } from 'vue-router';
 
 const baseURI = 'https://swapi.dev/api'
 
