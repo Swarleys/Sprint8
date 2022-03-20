@@ -7,14 +7,15 @@ export const useStarWarsPilots = defineStore('pilots', {
         idPilots: [] as string[]
     }),
     actions: {
-        async fetchPilots(arrayPilotsUris:string[]): Promise<void> {
+        async fetchPilots(arrayPilotsUris:string[]): Promise<Pilot> {
             this.pilots = [];
+            let pilotsResponse;
             for (const pilotUri of arrayPilotsUris) {
                 const res = await fetch(`${pilotUri}`);
-                const pilotsResponse = await res.json() as Pilot;           
+                pilotsResponse = await res.json() as Pilot;           
                 this.pilots.push(pilotsResponse)
             }
+            return pilotsResponse as Pilot;
         },
-
     },
 });

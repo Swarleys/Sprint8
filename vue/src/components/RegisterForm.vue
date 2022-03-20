@@ -1,130 +1,88 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import {
     Dialog,
     DialogOverlay,
 } from "@headlessui/vue";
 import { useUsers } from '../stores/users';
 const storeUsers = useUsers();
-const type = ref('password');
-const checked = ref(false);
-const firstName = ref("");
-const lastName = ref("");
-const userEmail = ref("");
-const displayName = ref("");
-const password = ref("");
-const firstNameError = ref(false);
-const lastNameError = ref(false);
-const userEmailError = ref(false);
-const displayNameError = ref(false);
-const passwordError = ref(false);
-const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const router = useRouter();
-
-const createUser = () => {
-    if (firstName.value.length > 0 && lastName.value.length > 0 && userEmail.value.length > 0 && displayName.value.length > 0 && password.value.length > 0 && !firstNameError.value && !lastNameError.value && !userEmailError.value && !displayNameError.value && !passwordError.value) {        
-        const user = userEmail.value
-        const userExists = (window.localStorage.getItem(user) !== null)
-
-        if (userExists) {
-            console.log("This email is already registered.")
-        } else {
-            const newUser = {
-                firstName: firstName.value,
-                lastName: lastName.value,
-                email: userEmail.value,
-                username: displayName.value,
-                password: password.value
-            }
-            window.localStorage.setItem(user, JSON.stringify(newUser))
-            console.log('There are no errors you will be registered right away.');
-            storeUsers.addUser(userEmail.value, password.value);
-            storeUsers.isLogged = true;
-            router.push('/starships');
-            storeUsers.isOpenRegister = false
-        }
-    } else {
-        console.log('There are errors, fix them.');
-    }
-}
 </script>
 
 <template>
-    <Dialog :open="storeUsers.isOpenRegister" @close="storeUsers.isOpenRegister = !storeUsers.isOpenRegister" class="flex justify-center">
+    <Dialog :open="storeUsers.isOpenRegister" @close="storeUsers.resetRegister" class="flex justify-center">
         <DialogOverlay class="fixed inset-0 bg-black/20" />
         <div class="absolute max-w-md mx-auto bg-gray-900 rounded-md p-10 top-28 shadow-lg">
+            <div class="logoPrimary h-[60px] bg-no-repeat w-[70%] m-auto"></div>
+            <div v-if="storeUsers.isLogged === false">
             <form @submit.prevent class="flex flex-col max-w-md m-auto gap-3">
-                <div class="logoPrimary h-[60px] bg-no-repeat w-[70%] m-auto"></div>
                 <h2 class="text-4xl text-yellow-300 text-center uppercase">Create your account</h2>
                 <input
                     type="text"
                     placeholder="First Name"
-                    v-model="firstName"
+                    v-model="storeUsers.firstName"
                     class="border-2 border-slate-500 focus:outline-none p-2"
-                    @input="firstName.length > 0 ? firstNameError = false : firstNameError = true"
-                    @blur="firstName.length === 0 ? firstNameError = true : firstNameError = false"
+                    @input="storeUsers.firstName.length > 0 ? storeUsers.firstNameError = false : storeUsers.firstNameError = true"
+                    @blur="storeUsers.firstName.length === 0 ? storeUsers.firstNameError = true : storeUsers.firstNameError = false"
                 />
                 <span
-                    v-if="firstNameError"
+                    v-if="storeUsers.firstNameError"
                     class="block text-red-400"
                 >You need to introduce a first name</span>
                 <input
                     type="text"
                     placeholder="Last Name"
-                    v-model="lastName"
+                    v-model="storeUsers.lastName"
                     class="border-2 border-slate-500 focus:outline-none p-2"
-                    @input="lastName.length > 0 ? lastNameError = false : lastNameError = true"
-                    @blur="lastName.length === 0 ? lastNameError = true : lastNameError = false"
+                    @input="storeUsers.lastName.length > 0 ? storeUsers.lastNameError = false : storeUsers.lastNameError = true"
+                    @blur="storeUsers.lastName.length === 0 ? storeUsers.lastNameError = true : storeUsers.lastNameError = false"
                 />
                 <span
-                    v-if="lastNameError"
+                    v-if="storeUsers.lastNameError"
                     class="block text-red-400 my-2"
                 >You need to introduce a last name</span>
                 <input
                     type="email"
                     placeholder="Email Address"
-                    v-model="userEmail"
+                    v-model="storeUsers.userEmail"
                     class="border-2 border-slate-500 focus:outline-none p-2"
-                    @input="userEmail.length > 0 ? userEmailError = false : userEmailError = true"
-                    @blur="userEmail.length === 0 || !userEmail.match(mailFormat) ? userEmailError = true : userEmailError = false"
+                    @input="storeUsers.userEmail.length > 0 ? storeUsers.userEmailError = false : storeUsers.userEmailError = true"
+                    @blur="storeUsers.userEmail.length === 0 || !storeUsers.userEmail.match(storeUsers.mailFormat) ? storeUsers.userEmailError = true : storeUsers.userEmailError = false"
                 />
                 <span
-                    v-if="userEmailError"
+                    v-if="storeUsers.userEmailError"
                     class="block text-red-400 my-2"
                 >You need to introduce a valid email</span>
                 <input
                     type="text"
                     placeholder="Display Name"
-                    v-model="displayName"
+                    v-model="storeUsers.displayName"
                     class="border-2 border-slate-500 focus:outline-none p-2"
-                    @input="displayName.length > 0 ? displayNameError = false : displayNameError = true"
-                    @blur="displayName.length === 0 ? displayNameError = true : displayNameError = false"
+                    @input="storeUsers.displayName.length > 0 ? storeUsers.displayNameError = false : storeUsers.displayNameError = true"
+                    @blur="storeUsers.displayName.length === 0 ? storeUsers.displayNameError = true : storeUsers.displayNameError = false"
                 />
                 <span
-                    v-if="displayNameError"
+                    v-if="storeUsers.displayNameError"
                     class="block text-red-400 my-2"
                 >You need to introduce a display name</span>
                 <input
-                    :type="type"
+                    :type="storeUsers.type"
                     placeholder="Password"
-                    v-model="password"
+                    v-model="storeUsers.password"
                     class="border-2 border-slate-500 focus:outline-none p-2"
                     minlength="6"
                     maxlength="44"
-                    @input="password.length > 5 && password.length < 45 ? passwordError = false : passwordError = true"
-                    @blur="password.length === 0 ? passwordError = true : passwordError = false"
+                    @input="storeUsers.password.length > 5 && storeUsers.password.length < 45 ? storeUsers.passwordError = false : storeUsers.passwordError = true"
+                    @blur="storeUsers.password.length === 0 ? storeUsers.passwordError = true : storeUsers.passwordError = false"
                 />
                 <span
-                    v-if="passwordError"
+                    v-if="storeUsers.passwordError"
                     class="block text-red-400 my-2 w-full"
                 >You need to introduce a password with atleast 6 characters and atmost 44</span>
                 <label for="showPassword" class="text-white">
                     <input
                         id="showPassword"
                         type="checkbox"
-                        v-model="checked"
-                        @click="!checked ? type = 'text' : type = 'password'"
+                        v-model="storeUsers.checked"
+                        @click="!storeUsers.checked ? storeUsers.type = 'text' : storeUsers.type = 'password'"
                     />
                     Show Password
                 </label>
@@ -132,9 +90,18 @@ const createUser = () => {
                     type="button"
                     value="Create Account"
                     class="px-4 py-2 rounded-md bg-gray-600 text-white"
-                    @click="createUser"
+                    @click="storeUsers.addUser"
                 />
             </form>
+            </div>
+            <div v-else>
+                <h2 class="text-4xl text-yellow-300 text-center uppercase my-4">You're logged already.</h2>
+                <input
+                    type="button"
+                    value="Log Out"
+                    class="px-4 py-2 rounded-md bg-gray-600 text-white text-center m-auto block my-4 focus:outline-none"
+                    @click="storeUsers.logOut"/>
+            </div>
         </div>
     </Dialog>
 </template>

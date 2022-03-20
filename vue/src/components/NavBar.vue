@@ -11,7 +11,7 @@ const storeUsers = useUsers();
         <div></div>
         <img src="../assets/starwarslogo.png" alt="StarWars logo" class="p-20 text-center md:ml-52 lg:ml-60  ml-2" />
         <div class="sm:pr-12 pr-0 text-2xl mb-16 md:mb-0">
-            <span class="uppercase hover:cursor-pointer" @click="storeUsers.isOpenLogin = true">Log In </span>
+            <span class="uppercase hover:cursor-pointer" @click="storeUsers.isOpenLogIn = true">Log In </span>
             <span>//</span>
             <span class="uppercase hover:cursor-pointer" @click="storeUsers.isOpenRegister = true"> Sign up</span>
         </div>

@@ -27,8 +27,11 @@ export interface StarshipList {
 }
 
 export interface Users {
-    "email": string,
-    "password": string
+    "firstName": string,
+    "lastName": string,
+    "displayName": string
+    "userEmail": string,
+    "password": string,
 }[]
 
 export interface Pilot {

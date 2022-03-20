@@ -32,7 +32,7 @@ router.beforeEach((to) => {
     const storeUsers = useUsers();
 
     if (to.meta.requiresAuth && !storeUsers.isLogged) {
-        storeUsers.isOpenLogin = true;
+        storeUsers.isOpenLogIn = true;
         return '/'
     }
 })

@@ -1,73 +1,66 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import {
     Dialog,
     DialogOverlay,
 } from "@headlessui/vue";
 import { useUsers } from '../stores/users';
 const storeUsers = useUsers();
-const userEmail = ref("");
-const password = ref("");
-const router = useRouter();
-
-const singInUser = () => {
-    const user = userEmail.value;
-    const userLocalStorage = window.localStorage.getItem(user);
-    if (userLocalStorage) {
-        const userParsed = JSON.parse(userLocalStorage);
-        if (password.value === userParsed.password) {
-            console.log("Correct user, welcome back.");
-            storeUsers.isOpenLogin = false;
-            storeUsers.isLogged = true;
-            router.push('/starships');
-        } else {
-            alert("Password is not correct.");
-        }
-        
-    }else {
-        alert("User not found.");
-    }
-}
-
-const openRegister = () => {
-    storeUsers.isOpenLogin = false;
-    storeUsers.isOpenRegister = true;
-}
 
 </script>
 
 <template>
     <Dialog
-        :open="storeUsers.isOpenLogin"
-        @close="storeUsers.isOpenLogin = !storeUsers.isOpenLogin"
+        :open="storeUsers.isOpenLogIn"
+        @close="storeUsers.resetLogIn"
         class="flex justify-center"
     >
         <DialogOverlay class="fixed inset-0 bg-black/20" />
         <div class="absolute max-w-md mx-auto bg-gray-900 rounded-md p-10 top-28 shadow-lg">
-            <form @submit.prevent class="flex flex-col max-w-md m-auto gap-3 mb-4">
-                <div class="logoPrimary h-[60px] bg-no-repeat w-[90%] m-auto"></div>
-                <h2 class="text-4xl text-yellow-300 text-center uppercase">Sign In</h2>
-                <input
-                    type="email"
-                    placeholder="Email Address"
-                    v-model="userEmail"
-                    class="border-2 border-slate-500 focus:outline-none p-2"
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    v-model="password"
-                    class="border-2 border-slate-500 focus:outline-none p-2"
-                />
+            <div class="logoPrimary h-[60px] bg-no-repeat w-[90%] m-auto"></div>
+            <div v-if="storeUsers.isLogged === false">
+                <form @submit.prevent class="flex flex-col max-w-md m-auto gap-3 mb-4">
+                    <h2 class="text-4xl text-yellow-300 text-center uppercase">Sign In</h2>
+                    <input
+                        type="email"
+                        placeholder="Email Address"
+                        v-model="storeUsers.userEmailLogIn"
+                        class="border-2 border-slate-500 focus:outline-none p-2"
+                    />
+                    <input
+                        :type="storeUsers.typeLogIn"
+                        placeholder="Password"
+                        v-model="storeUsers.passwordLogIn"
+                        class="border-2 border-slate-500 focus:outline-none p-2"
+                    />
+                    <label for="showPassword" class="text-white">
+                        <input
+                            id="showPassword"
+                            type="checkbox"
+                            v-model="storeUsers.checkedLogIn"
+                            @click="!storeUsers.checkedLogIn ? storeUsers.typeLogIn = 'text' : storeUsers.typeLogIn = 'password'"
+                        />
+                        Show Password
+                    </label>
+                    <input
+                        type="button"
+                        value="Sign in"
+                        class="px-4 py-2 rounded-md bg-gray-600 text-white"
+                        @click="storeUsers.singInUser"
+                    />
+                </form>
+            </div>
+            <div v-else>
+                <h2 class="text-4xl text-yellow-300 text-center uppercase my-4">You're logged already.</h2>
                 <input
                     type="button"
-                    value="Sign in"
-                    class="px-4 py-2 rounded-md bg-gray-600 text-white"
-                    @click="singInUser"
-                />
-            </form>
-            <p class="text-yellow-300 px-4 py-3 text-center hover:border-yellow-300 hover:border-2 rounded " @click="openRegister">Create an Account</p>
+                    value="Log Out"
+                    class="px-4 py-2 rounded-md bg-gray-600 text-white text-center m-auto block my-4 focus:outline-none"
+                    @click="storeUsers.logOut"/>
+            </div>
+            <p
+                class="text-yellow-300 px-4 py-3 text-center hover:border-yellow-300 hover:border-2 rounded"
+                @click="storeUsers.openRegister"
+            >Create an Account</p>
         </div>
     </Dialog>
 </template>
