@@ -12,7 +12,6 @@ const storeUsers = useUsers();
         <DialogOverlay class="fixed inset-0 bg-black/20" />
         <div class="absolute max-w-md mx-auto bg-gray-900 rounded-md p-10 top-28 shadow-lg">
             <div class="logoPrimary h-[60px] bg-no-repeat w-[70%] m-auto"></div>
-            <div v-if="storeUsers.isLogged === false">
             <form @submit.prevent class="flex flex-col max-w-md m-auto gap-3">
                 <h2 class="text-4xl text-yellow-300 text-center uppercase">Create your account</h2>
                 <input
@@ -93,15 +92,6 @@ const storeUsers = useUsers();
                     @click="storeUsers.addUser"
                 />
             </form>
-            </div>
-            <div v-else>
-                <h2 class="text-4xl text-yellow-300 text-center uppercase my-4">You're logged already.</h2>
-                <input
-                    type="button"
-                    value="Log Out"
-                    class="px-4 py-2 rounded-md bg-gray-600 text-white text-center m-auto block my-4 focus:outline-none"
-                    @click="storeUsers.logOut"/>
-            </div>
         </div>
     </Dialog>
 </template>

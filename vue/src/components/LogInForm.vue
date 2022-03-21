@@ -48,19 +48,19 @@ const storeUsers = useUsers();
                         @click="storeUsers.singInUser"
                     />
                 </form>
+                <p
+                    class="text-yellow-300 px-4 py-3 text-center hover:border-yellow-300 hover:border-2 rounded"
+                    @click="storeUsers.openRegister"
+                >Create an Account</p>
             </div>
-            <div v-else>
-                <h2 class="text-4xl text-yellow-300 text-center uppercase my-4">You're logged already.</h2>
+            <div v-else class="w-[350px]">
                 <input
                     type="button"
                     value="Log Out"
                     class="px-4 py-2 rounded-md bg-gray-600 text-white text-center m-auto block my-4 focus:outline-none"
-                    @click="storeUsers.logOut"/>
+                    @click="storeUsers.logOut"
+                />
             </div>
-            <p
-                class="text-yellow-300 px-4 py-3 text-center hover:border-yellow-300 hover:border-2 rounded"
-                @click="storeUsers.openRegister"
-            >Create an Account</p>
         </div>
     </Dialog>
 </template>
